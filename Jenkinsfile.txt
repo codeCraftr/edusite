@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'git https://github.com/codeCraftr/edusite'
+                sh 'cp index.html https://github.com/codeCraftr/edusite/blob/main/index.html'
+                sh 'cp script.js /path/to/build/directory/blob/main/js/script.js' 
+                sh 'cp styles.css /path/to/build/directory/blob/main/css/style.css'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'npm install html-validate' 
+                sh 'html-validate https://github.com/codeCraftr/edusite/blob/main/index.html' 
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh 'aws configure set aws_access_key_id gitactions2@gmail.com'
+                sh 'aws configure set aws_secret_access_key Cloudproject1!'
+ 		{
+                    sh 'aws s3 cp https://github.com/codeCraftr/edusite/blob/main/index.html http://edusite.s3-website-us-east-1.amazonaws.com/'
+                }
+            }
+        }
+    }
+}
